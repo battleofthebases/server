@@ -4,7 +4,7 @@ class Client{
     public ws: any;
 
     constructor() {
-        this.ws = new websocket('ws://localhost:8080');
+        this.ws = new websocket('wss://localhost:8080');
         this.mountRoutes();
     }
     
