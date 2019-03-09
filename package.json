@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./dist/App.js"
+  },
+  "author": "Battle of the Bases",
+  "dependencies": {
+    "@types/node": "^11.11.0",
+    "nodemon": "^1.18.10",
+    "ws": "^6.2.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^1.4.2",
+    "eslint": "^5.15.0",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.3333"
+  }
+}
