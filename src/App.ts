@@ -19,9 +19,11 @@ class Room {
 
     private handleMessage(): void {
         this.player1.on('message', (msg) => {
+            console.log({player1: msg});
             this.player2.send(msg);
         });
         this.player2.on('message', (msg) => {
+            console.log({player2:msg});
             this.player1.send(msg);
         });
     }
@@ -51,29 +53,28 @@ class App {
  */        });
     }
 
-    private findConnection(conn: any): void {
-        console.log("FIND CONNECTION");
+    private findConnection(ws: any): void {
         if (this.connections.length > 0) {
             for (let i = 0; i < this.connections.length; i++) {
-                const conn2 = this.connections[i];
-                if (conn2.readyState === websocket.OPEN) {
+                const conn = this.connections[i];
+                if (conn.readyState === websocket.OPEN) {
                     console.log({ findconnection: "found connection" });
                     //remove from list of available connections
                     for (let j = 0; j < this.connections.length; j++) {
-                        if (this.connections[j].id === conn.id) this.connections.splice(j, 1);
-                        else if (this.connections[j].id === conn2.id) this.connections.splice(j, 1);
+                        if (this.connections[j].id === ws.id) this.connections.splice(j, 1);
+                        else if (this.connections[j].id === conn.id) this.connections.splice(j, 1);
                     }
                     //join connections together in room
-                    const p = new Room(conn, conn2);
+                    const p = new Room(ws, conn);
                     this.rooms.push(p);
                     return;
                 }
             }
-
         }else{
             //no available connections, wait for incoming clients
-            this.connections.push(conn);
-            console.log({no_available_connecitons:this.connections.length});
+            ws.send("Waiting for players");
+            this.connections.push(ws);
+            console.log({no_available_connections:this.connections.length});
         }
        
     }
