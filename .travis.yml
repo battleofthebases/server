@@ -5,6 +5,9 @@ node_js:
 script:
   - npm start
 
+  after_script:
+    - pkill node
+
 notifications:
   email: false
   slack: progarkworkspace:lJ8ROk1HkSIZfuegeamJk3fe
