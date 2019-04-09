@@ -45,23 +45,28 @@ class App {
     private listener(): void {
         this.wss.on('connection', (ws: any) => {
             ws.id = generateID(); //assign each client an id;
-            console.log({ new_conn: ws.id });
+            console.log(`new connection: ${ws.id}`);
             this.findConnection(ws); //immediately start search for other player
             ws.on('close', () => {
-                console.log("CLOSING SHOP");
-                console.log(this.rooms.length);
+                console.log(`${ws.id} disconnected, cleaning up 🍅`);
                 //remove room in which websocket resides
                 for (let i = 0; i < this.rooms.length; i++) {
                     const player1 = this.rooms[i].player1;
                     const player2 = this.rooms[i].player2;
                     if (player1.id === ws.id || player2.id === ws.id) {
-                        if(player1.readyState === websocket.OPEN) player1.send("RemovedFromRoom");
-                        if(player2.readyState === websocket.OPEN) player2.send("RemovedFromRoom");
-                        this.rooms.splice(i,1);
-                        console.log({close: `${ws.id} disconnected, cleaning up 🍔`});
-                        console.log({rooms: this.rooms.length});
+                        if (player1.readyState === websocket.OPEN) {
+                            console.log(`Notifying ${player1.id}`);
+                            player1.send("RemovedFromRoom:0");
+                        }
+                        if (player2.readyState === websocket.OPEN) {
+                            console.log(`Notifying ${player2.id}`);
+                            player2.send("RemovedFromRoom:0");
+                        }
+                        this.rooms.splice(i, 1);
                     }
                 }
+                console.log(`Rooms: ${this.rooms.length}`);
+                console.log(`Connections: ${this.connections.length}`);
             });
             //if a player wants to start a new game, search for other player
             ws.on('NewGame', (ws) => {
@@ -75,7 +80,7 @@ class App {
             for (let i = 0; i < this.connections.length; i++) {
                 const conn = this.connections[i];
                 if (conn.readyState === websocket.OPEN) {
-                    console.log({ findconnection: "found connection 🍔" });
+                    console.log(`${ws.id} connected with ${conn.id} 🍕`);
                     //remove from list of available connections
                     for (let j = 0; j < this.connections.length; j++) {
                         if (this.connections[j].id === ws.id) this.connections.splice(j, 1);
@@ -91,7 +96,7 @@ class App {
             //no available connections, wait for incoming clients
             ws.send("Waiting for players");
             this.connections.push(ws);
-            console.log("Waiting for players");
+            console.log(`${ws.id} is waiting for players...`);
         }
     }
 }
@@ -102,7 +107,5 @@ function generateID() {
     }
     return s4() + s4() + '-' + s4();
 }
-
-
 
 export default new App();
