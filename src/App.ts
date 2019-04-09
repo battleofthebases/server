@@ -89,6 +89,8 @@ class App {
                     //join connections together in room
                     const p = new Room(ws, conn);
                     this.rooms.push(p);
+                    ws.send("AddedToRoom:0");
+                    conn.send("AddedToRoom:0");
                     return;
                 }
             }
