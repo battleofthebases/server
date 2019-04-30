@@ -90,7 +90,7 @@ class App {
                     const p = new Room(ws, conn);
                     this.rooms.push(p);
                     ws.send("AddedToRoom:0");
-                    conn.send("AddedToRoom:0");
+                    conn.send("AddedToRoom:1");
                     return;
                 }
             }
